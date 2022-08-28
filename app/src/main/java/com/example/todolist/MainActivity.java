@@ -37,35 +37,35 @@ public class MainActivity extends AppCompatActivity {
         showNotes();
     }
 
-    private void initViews() {
-        linearLayoutNotes = findViewById(R.id.linearLayoutNotes);
-        buttonAddNote = findViewById(R.id.buttonAddNote);
-    }
-
     private void showNotes() {
         linearLayoutNotes.removeAllViews();
         for (Note note: database.getNotes()) {
-            View view = getLayoutInflater().inflate(R.layout.note_item,
-                    linearLayoutNotes,
-                    false);
+            View view = getLayoutInflater().inflate(R.layout.note_item, linearLayoutNotes, false);
             linearLayoutNotes.addView(view);
+
             TextView textView = view.findViewById(R.id.textViewNote);
             textView.setText(note.getText());
 
-            int colorResId;
+            int idResColor;
+
             switch (note.getPriority()) {
                 case 0:
-                    colorResId = android.R.color.holo_green_light;
+                    idResColor = android.R.color.holo_green_light;
                     break;
                 case 1:
-                    colorResId = android.R.color.holo_orange_light;
+                    idResColor = android.R.color.holo_orange_light;
                     break;
                 default:
-                    colorResId = android.R.color.holo_red_light;
-                    break;
+                    idResColor = android.R.color.holo_red_light;
             }
-            int color = ContextCompat.getColor(this, colorResId);
-            textView.setBackgroundColor(color);
+            int idColor = ContextCompat.getColor(this, idResColor);
+            textView.setBackgroundColor(idColor);
         }
+    }
+
+
+    private void initViews() {
+        linearLayoutNotes = findViewById(R.id.linearLayoutNotes);
+        buttonAddNote = findViewById(R.id.buttonAddNote);
     }
 }

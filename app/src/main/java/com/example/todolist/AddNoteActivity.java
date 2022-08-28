@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class AddNoteActivity extends AppCompatActivity {
 
-    private EditText editTextTextNote;
+    private EditText editTextNote;
     private RadioButton radioButtonLow;
     private RadioButton radioButtonMedium;
     private Button buttonSave;
@@ -25,26 +25,24 @@ public class AddNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_note);
         initViews();
 
-        buttonSave.setOnClickListener(l -> saveNote());
+        buttonSave.setOnClickListener(l -> saveNotes());
     }
 
     public static Intent newIntent(Context context) {
         return new Intent(context, AddNoteActivity.class);
     }
 
-    private void saveNote() {
-        String text = editTextTextNote.getText().toString().trim();
+    private void saveNotes() {
+        String text = editTextNote.getText().toString().trim();
+        int priority = getPriority();
+        int id = database.getNotes().size();
         if(!text.isEmpty()) {
-            int priority = getPriority();
-            int id = database.getNotes().size();
             Note note = new Note(id, text, priority);
+            database.add(note);
 
             finish();
-            database.add(note);
         } else {
-            Toast.makeText(this,
-                    R.string.warning,
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.warning, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -61,8 +59,9 @@ public class AddNoteActivity extends AppCompatActivity {
         return priority;
     }
 
+
     private void initViews() {
-        editTextTextNote = findViewById(R.id.editTextTextNote);
+        editTextNote = findViewById(R.id.editTextNote);
         radioButtonLow = findViewById(R.id.radioButtonLow);
         radioButtonMedium = findViewById(R.id.radioButtonMedium);
         buttonSave = findViewById(R.id.buttonSave);
