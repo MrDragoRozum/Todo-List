@@ -11,15 +11,13 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout linearLayoutNotes;
     private FloatingActionButton buttonAddNote;
 
-    private ArrayList<Note> notes = new ArrayList<>();
+    private final Database database = Database.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +25,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
 
-        Random random = new Random();
-        for(int i = 0; i < 20; i++) {
-            Note note = new Note(i, "Note: " + i, random.nextInt(3));
-            notes.add(note);
-        }
-        showNotes();
-
         buttonAddNote.setOnClickListener(l -> {
             Intent intent = AddNoteActivity.newIntent(this);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showNotes();
     }
 
     private void initViews() {
@@ -46,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotes() {
-        for (Note note: notes) {
+        linearLayoutNotes.removeAllViews();
+        for (Note note: database.getNotes()) {
             View view = getLayoutInflater().inflate(R.layout.note_item,
                     linearLayoutNotes,
                     false);
