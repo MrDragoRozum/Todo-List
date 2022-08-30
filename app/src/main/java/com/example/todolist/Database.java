@@ -18,7 +18,7 @@ public class Database {
 
     private Database() {
         Random random = new Random();
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 10_000; i++) {
             Note note = new Note(i, "Note: " + i, random.nextInt(3));
             notes.add(note);
         }
