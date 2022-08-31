@@ -1,5 +1,6 @@
 package com.example.todolist;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
     ArrayList<Note> notes = new ArrayList<>();
 
+    public void setNotes(ArrayList<Note> notes) {
+        this.notes = notes;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        Log.d("NotesAdapter:", "onCreateViewHolder created view");
+
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.note_item,
                 parent,
@@ -29,6 +38,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
     @Override
     public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
+
+        Log.d("NotesAdapter:", "onBindViewHolder modified view: " + position);
+
         Note note = notes.get(position);
         holder.textViewNotes.setText(note.getText());
 
