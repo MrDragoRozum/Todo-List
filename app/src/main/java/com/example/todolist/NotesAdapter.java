@@ -15,12 +15,16 @@ import java.util.ArrayList;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder> {
 
-    OnNoteClickListener onNoteClickListener;
-    ArrayList<Note> notes = new ArrayList<>();
+    private ArrayList<Note> notes = new ArrayList<>();
+    private OnNoteClickListener onNoteClickListener;
 
     public void setNotes(ArrayList<Note> notes) {
         this.notes = notes;
         notifyDataSetChanged();
+    }
+
+    public ArrayList<Note> getNotes() {
+        return new ArrayList<>(notes);
     }
 
     public void setOnNoteClickListener(OnNoteClickListener onNoteClickListener) {
@@ -62,14 +66,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
                 break;
         }
 
+//        holder.itemView.setOnClickListener(l -> {
+//            if(onNoteClickListener != null) {
+//                onNoteClickListener.onNoteClick(note);
+//            }
+//        });
+
         int idColor = ContextCompat.getColor(holder.itemView.getContext(), idResColor);
         holder.textViewNotes.setBackgroundColor(idColor);
 
-        holder.itemView.setOnClickListener(l -> {
-            if (onNoteClickListener != null) {
-                onNoteClickListener.onNoteClick(note);
-            }
-        });
     }
 
     @Override
@@ -83,7 +88,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
         public NotesViewHolder(@NonNull View itemView) {
             super(itemView);
-
             textViewNotes = itemView.findViewById(R.id.textViewNote);
         }
     }
@@ -93,3 +97,4 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 interface OnNoteClickListener {
     void onNoteClick(Note note);
 }
+
