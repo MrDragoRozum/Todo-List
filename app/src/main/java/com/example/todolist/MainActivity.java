@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         notesAdapter = new NotesAdapter();
         recyclerViewNotes.setAdapter(notesAdapter);
 
+        notesAdapter.setOnNoteClickListener(note -> {
+            database.remove(note.getId());
+            showNotes();
+        });
+
         buttonAddNote.setOnClickListener(l -> {
             Intent intent = AddNoteActivity.newIntent(this);
             startActivity(intent);
