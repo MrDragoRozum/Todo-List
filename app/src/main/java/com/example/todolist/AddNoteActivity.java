@@ -1,5 +1,6 @@
-package com.example.todolist;
+package com.example.todolistpractive;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -17,19 +18,18 @@ public class AddNoteActivity extends AppCompatActivity {
     private RadioButton radioButtonMedium;
     private Button buttonSave;
 
-    private Database database = Database.getInstance();
-
-
+    private NoteDatabase noteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         initViews();
-        
+
         buttonSave.setOnClickListener(l -> saveNote());
     }
 
+    @NonNull
     public static Intent newIntent(Context context) {
         return new Intent(context, AddNoteActivity.class);
     }
@@ -38,33 +38,35 @@ public class AddNoteActivity extends AppCompatActivity {
         String text = editTextNote.getText().toString().trim();
         if(!text.isEmpty()) {
             int priority = getPriority();
-            int id = database.getNotes().size();
-            Note note = new Note(id, text, priority);
-            database.add(note);
+            Note note = new Note(text, priority);
+            noteDatabase.notesDao().add(note);
+
             finish();
         } else {
             Toast.makeText(this,
                     R.string.error_fields_empty,
                     Toast.LENGTH_SHORT).show();
         }
-     }
+    }
 
-     private int getPriority() {
+    private int getPriority() {
         int priority;
+
         if(radioButtonLow.isChecked()) {
-            priority = 0;
-        } else if(radioButtonMedium.isChecked()) {
-            priority = 1;
-        } else {
-            priority = 2;
+            return 0;
         }
-        return priority;
-     }
-    
+        if(radioButtonMedium.isChecked()) {
+            return 1;
+        }
+
+        return 2;
+    }
+
     private void initViews() {
         editTextNote = findViewById(R.id.editTextNote);
         radioButtonLow = findViewById(R.id.radioButtonLow);
         radioButtonMedium = findViewById(R.id.radioButtonMedium);
         buttonSave = findViewById(R.id.buttonSave);
+        noteDatabase = NoteDatabase.getInstance(getApplication());
     }
 }

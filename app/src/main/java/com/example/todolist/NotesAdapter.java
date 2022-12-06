@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com.example.todolistpractive;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +14,8 @@ import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder> {
 
-    private List<Note> notes;
+    private List<Note> notes = new ArrayList<>();
     private OnNoteClickListener onNoteClickListener;
-
-    public List<Note> getNotes() {
-        return new ArrayList<>(notes);
-    }
 
     public void setOnNoteClickListener(OnNoteClickListener onNoteClickListener) {
         this.onNoteClickListener = onNoteClickListener;
@@ -40,25 +36,26 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     }
 
     @Override
-    public void onBindViewHolder(NotesViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
         Note note = notes.get(position);
-        viewHolder.textView.setText(note.getText());
 
-        int colorResId;
+        holder.textView.setText(note.getText());
+
+        int resIdColor;
         switch (note.getPriority()) {
             case 0:
-                colorResId = android.R.color.holo_green_light;
+                resIdColor = android.R.color.holo_green_light;
                 break;
             case 1:
-                colorResId = android.R.color.holo_orange_light;
+                resIdColor = android.R.color.holo_orange_light;
                 break;
             default:
-                colorResId = android.R.color.holo_red_light;
+                resIdColor = android.R.color.holo_red_light;
         }
-        int color = ContextCompat.getColor(viewHolder.itemView.getContext(), colorResId);
-        viewHolder.textView.setBackgroundColor(color);
+        int colorId = ContextCompat.getColor(holder.textView.getContext(), resIdColor);
+        holder.textView.setBackgroundColor(colorId);
 
-        viewHolder.itemView.setOnClickListener(l -> {
+        holder.itemView.setOnClickListener(l -> {
             if(onNoteClickListener != null) {
                 onNoteClickListener.noteClickListener(note);
             }
@@ -70,9 +67,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         return notes.size();
     }
 
+    class NotesViewHolder extends RecyclerView.ViewHolder {
 
-     class NotesViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
+
         public NotesViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.textViewNote);
