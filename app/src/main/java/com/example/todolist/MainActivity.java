@@ -33,10 +33,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
 
-        noteDatabase = NoteDatabase.getInstance(getApplication());
+
+
         notesAdapter = new NotesAdapter();
+        recyclerViewNotes.setAdapter(notesAdapter);
 
-
+        noteDatabase = NoteDatabase.getInstance(getApplication());
 //                notesAdapter.setOnNoteClickListener(n -> {});
 
 
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                         int position = viewHolder.getAdapterPosition();
                         Thread thread = new Thread(() -> {
-                            Note note = notesAdapter.getNotes().get(position);
+                            Note note = noteDatabase.notesDao().getNotes().get(position);
                             noteDatabase.notesDao().remove(note.getId());
                             handler.post(MainActivity.this::showNotes);
                         });
@@ -81,23 +83,11 @@ public class MainActivity extends AppCompatActivity {
         buttonAddNote = findViewById(R.id.buttonAddNote);
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes);
     }
-
-    /*
-     * Такой забавный баг у меня: у автора курса создание и установка адаптера происходит в
-     * onCreate(). Лично у меня приложение падает из-за NPE. Пришлось перенести создание и установку
-     * в onResume() (то бишь в showNotes()).
-     */
     private void showNotes() {
-            Thread thread = new Thread(() -> {
-                List<Note> notes = noteDatabase.notesDao().getNotes();
-                handler.post(() -> {
-                    if(RVACreationLimit) {
-                        recyclerViewNotes.setAdapter(notesAdapter);
-                        RVACreationLimit = false;
-                    }
-                    notesAdapter.setNotes(notes);
-                });
-            });
-            thread.start();
+        Thread thread = new Thread(() -> {
+            List<Note> noteList = noteDatabase.notesDao().getNotes();
+            handler.post(() -> notesAdapter.setNotes(noteList));
+        });
+        thread.start();
     }
 }
