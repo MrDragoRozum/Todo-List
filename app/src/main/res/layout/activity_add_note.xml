@@ -9,14 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="@string/note_hit"
+        android:ems="10"
+        android:hint="@string/note_hint"
         android:inputType="text" />
 
     <RadioGroup
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="16dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <RadioButton
@@ -43,10 +44,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_red_light"
-            android:padding="8dp"
             android:text="@string/high"
-            android:textColor="@color/white" />
-
+            android:textColor="@color/white"
+            android:padding="8dp" />
     </RadioGroup>
 
     <Button
@@ -54,5 +54,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="@string/save_button" />
+        android:text="@string/save" />
 </LinearLayout>
