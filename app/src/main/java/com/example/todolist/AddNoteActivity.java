@@ -1,6 +1,7 @@
 package com.example.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +19,8 @@ public class AddNoteActivity extends AppCompatActivity {
     private RadioButton radioButtonLow;
     private RadioButton radioButtonMedium;
     private Button buttonSave;
+    private AddNoteViewModel viewModel;
 
-    private NoteDatabase noteDatabase;
-    private Handler handler = new Handler(Looper.getMainLooper());
 
 
 
@@ -28,6 +28,14 @@ public class AddNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+
+        viewModel = new ViewModelProvider(this).get(AddNoteViewModel.class);
+        viewModel.getShouldClosedScreen().observe(this, shouldClose -> {
+            if(shouldClose) {
+                finish();
+            }
+        });
+
         initViews();
         
         buttonSave.setOnClickListener(l -> saveNote());
@@ -42,11 +50,7 @@ public class AddNoteActivity extends AppCompatActivity {
         if(!text.isEmpty()) {
             int priority = getPriority();
             Note note = new Note(text, priority);
-            Thread thread = new Thread(() -> {
-                noteDatabase.notesDao().add(note);
-                handler.post(this::finish);}
-            );
-            thread.start();
+            viewModel.addNote(note);
         } else {
             Toast.makeText(this,
                     R.string.error_fields_empty,
@@ -69,6 +73,5 @@ public class AddNoteActivity extends AppCompatActivity {
         radioButtonLow = findViewById(R.id.radioButtonLow);
         radioButtonMedium = findViewById(R.id.radioButtonMedium);
         buttonSave = findViewById(R.id.buttonSave);
-        noteDatabase = NoteDatabase.getInstance(getApplication());
     }
 }

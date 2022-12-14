@@ -2,24 +2,23 @@ package com.example.todolist;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 
 
 public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton buttonAddNote;
     private RecyclerView recyclerViewNotes;
-
     private NotesAdapter notesAdapter;
-
     private MainViewModel viewModel;
 
     @Override
@@ -27,13 +26,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewModel = new MainViewModel(getApplication());
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         initViews();
 
         notesAdapter = new NotesAdapter();
         recyclerViewNotes.setAdapter(notesAdapter);
-
-//                notesAdapter.setOnNoteClickListener(n -> {});
 
         viewModel.getNotes().observe(this, (notes) ->
                 notesAdapter.setNotes(notes));

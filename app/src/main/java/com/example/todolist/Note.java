@@ -1,4 +1,4 @@
-package com.example.todolistpractive;
+package com.example.todolist;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -10,7 +10,6 @@ public class Note {
     private int id;
     private String text;
     private int priority;
-    private final static int DEFAULT_ZERO = 0;
 
     public Note(int id, String text, int priority) {
         this.id = id;
@@ -20,7 +19,7 @@ public class Note {
 
     @Ignore
     public Note(String text, int priority) {
-        this(DEFAULT_ZERO, text, priority);
+        this(0, text, priority);
     }
 
     public int getId() {
