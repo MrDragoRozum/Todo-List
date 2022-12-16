@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewNotes.setAdapter(notesAdapter);
 
         viewModel.getNotes().observe(this, (notes) -> {
-                notesAdapter.setNotes(notes);
+            notesAdapter.setNotes(notes);
             Log.d("MainActivity", "Added in RecyclerView!");
         });
 
@@ -64,12 +63,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = AddNoteActivity.newIntent(this);
             startActivity(intent);
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        viewModel.refreshList();
     }
 
     private void initViews() {

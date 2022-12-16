@@ -1,6 +1,5 @@
 package com.example.todolist;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.util.Log;
 
@@ -9,14 +8,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AddNoteViewModel extends AndroidViewModel {
@@ -31,16 +26,13 @@ public class AddNoteViewModel extends AndroidViewModel {
     }
 
     public void addNote(Note note) {
-        Disposable disposable = addNoteRX(note)
+        Disposable disposable = notesDao.add(note)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> shouldClosedScreen.setValue(true));
+                .subscribe(() -> shouldClosedScreen.setValue(true),
+                        throwable -> Log.d("AddNoteViewModel", "addNoteRX() error!"));
         compositeDisposable.add(disposable);
 
-    }
-
-    private Completable addNoteRX(Note note) {
-        return Completable.fromAction(() -> notesDao.add(note));
     }
 
     @Override
