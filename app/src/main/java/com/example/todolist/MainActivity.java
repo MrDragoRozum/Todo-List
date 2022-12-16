@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -33,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
         notesAdapter = new NotesAdapter();
         recyclerViewNotes.setAdapter(notesAdapter);
 
-        viewModel.getNotes().observe(this, (notes) ->
-                notesAdapter.setNotes(notes));
+        viewModel.getNotes().observe(this, (notes) -> {
+                notesAdapter.setNotes(notes);
+            Log.d("MainActivity", "Added in RecyclerView!");
+        });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(
@@ -61,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = AddNoteActivity.newIntent(this);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.refreshList();
     }
 
     private void initViews() {

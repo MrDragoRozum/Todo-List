@@ -31,20 +31,11 @@ public class AddNoteViewModel extends AndroidViewModel {
 
     public void addNote(Note note) {
         Disposable disposable = notesDao.add(note)
-                .delay(5, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    Log.d("AddNoteViewModel","subscribe");
-                    shouldClosedScreen.setValue(true);
-                });
+                .subscribe(() -> shouldClosedScreen.setValue(true));
         compositeDisposable.add(disposable);
 
-//        Thread thread = new Thread(() -> {
-//            notesDao.add(note);
-//            shouldClosedScreen.pastValue(true));
-//        });
-//        thread.start();
     }
 
     @Override
